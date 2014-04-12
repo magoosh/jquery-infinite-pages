@@ -1,13 +1,15 @@
 jQuery Infinite Pages
 =====================
 
-A light-weight jQuery plugin for adding infinite scrolling to paginated HTML views,
-designed for integration with the Kaminari Rails plugin.
+A light-weight jQuery plugin for adding infinite scrolling to paginated HTML views.
+
+This plugin's designed for Kaminari and Rails, but it should be flexible enough to use
+almost anywhere.
 
 Installation
 ------------
 
-Just copy the `jquery.infinite-pages.js.coffee` file in your `app/assets/javascripts`
+Just copy the `jquery.infinite-pages.js.coffee` file to your `app/assets/javascripts`
 folder.
 
 (It would be awesome to make this a gem, so consider that a feature request :smile:)
