@@ -4,10 +4,6 @@ jQuery Infinite Pages
 A custom jQuery plugin for adding infinite scrolling to paginated HTML views, designed
 for integration with the Kaminari Rails plugin.
 
-When the user scrolls to the point where the `rel="next"` link is within a set number 
-of pixels of the bottom of the screen, an async request to the next page is triggered.
-The response should then update the displayed data and the pagination link.
-
 Installation
 ------------
 
@@ -19,7 +15,11 @@ folder.
 Plugin Usage
 ------------
 
-```
+When the user scrolls to the point where the `rel="next"` link is within `buffer` pixels
+of the bottom of the screen, an async request to the next page is triggered. The response
+should then update the displayed data and the pagination link.
+
+```coffeescript
 # Setup plugin and define optional event callbacks
 $('.infinite-table').infinitePages
  debug: true
@@ -45,6 +45,9 @@ $('.infinite-table').infinitePages('resume')
 
 Rails/Kaminari Example
 ----------------------
+
+The following is an example of how to integrate this plugin into your Rails app
+using Kaminari.
 
 Example `lessons_controller.rb`:
 
@@ -92,7 +95,8 @@ Example `index.js.erb`:
 
 ```javascript
 // Append new data
-$("<%=j render(:partial => 'lessons', :object => @lessons) %>").appendTo($(".infinite-table tbody"));
+$("<%=j render(:partial => 'lessons', :object => @lessons) %>")
+  .appendTo($(".infinite-table tbody"));
 
 // Update pagination link
 <% if answers.last_page? %>
