@@ -96,12 +96,12 @@ Released under the MIT License
     # Pause firing of events on scroll
     pause: ->
       @options.state.paused = true
-      @_log("Scroll checks paused")
+      @_log "Scroll checks paused"
     
     # Resume firing of events on scroll
     resume: ->
       @options.state.paused = false
-      @_log("Scroll checks resumed")
+      @_log "Scroll checks resumed"
       @check()
     
   # Define the plugin
