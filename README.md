@@ -1,8 +1,8 @@
 jQuery Infinite Pages
 =====================
 
-A custom jQuery plugin for adding infinite scrolling to paginated HTML views, designed
-for integration with the Kaminari Rails plugin.
+A light-weight jQuery plugin for adding infinite scrolling to paginated HTML views,
+designed for integration with the Kaminari Rails plugin.
 
 Installation
 ------------
@@ -31,7 +31,7 @@ $('.infinite-table').infinitePages
    # called after successful ajax call
  error: ->
    # called after failed ajax call
-   $(this).text("Trouble! Please drink some coconut water and try again")
+   $(this).text("Trouble! Please drink some coconut water and click again")
 
 # Force load of the next page
 $('.infinite-table').infinitePages('next')
@@ -54,7 +54,7 @@ Example `lessons_controller.rb`:
 ```ruby
 class LessonsController
   def index
-    @lessons = current_user.subscribed_lessons.page(params[:page])
+    @lessons = Lesson.order('lessons.name ASC').page(params[:page])
   end
 end
 ```
@@ -67,7 +67,7 @@ Example `index.html.erb`:
    <thead>
      <tr>
        <th>Lesson</th>
-       <th>Length</th>
+       <th></th>
      </tr>
    </thead>
    <tbody>
@@ -85,8 +85,8 @@ Example `_lessons.html.erb`:
 ```erb
 <% @lessons.each do |lesson| %>
   <tr>
-    <td><%= lesson.name %></td>
-    <td><%= lesson.length.format %></td>
+    <td><%= lesson.name %> (<%= lesson.length.format %>)</td>
+    <td><%= link_to "watch", lesson_path(lesson) %></td>
   </tr>
 <% end %>
 ```
@@ -100,7 +100,7 @@ $("<%=j render(:partial => 'lessons', :object => @lessons) %>")
 
 // Update pagination link
 <% if answers.last_page? %>
-  $('.pagination').remove();
+  $('.pagination').html("That's all, folks!");
 <% else %>
   $('.pagination').html("<%=j link_to_next_page(@lessons, 'Next Page'))%>");
 <% end %>
