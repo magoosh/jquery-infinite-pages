@@ -3,16 +3,17 @@ jQuery Infinite Pages
 
 A light-weight jQuery plugin for adding infinite scrolling to paginated HTML views.
 
-This plugin's designed for Kaminari and Rails, but it should be flexible enough to use
+This plugin is designed for Kaminari and Rails, but it should be flexible enough to use
 almost anywhere.
 
 Usage
 -----
-Infinite Pages binds to an element containing a `rel="next"` pagination link and
-watches for scroll events. When the link is close to the bottom of the screen, an async
-request to the next page is triggered.
+jQuery Infinite Pages binds to an element containing a `rel="next"` pagination link and
+watches for scroll events.
 
-The server's response should add the new page and update the pagination link.
+When the link is close to the bottom of the screen, an async request to the next page
+is triggered. The server's response should then append the new page and update the
+pagination link.
 
 ```coffeescript
 # Setup plugin and define optional event callbacks
@@ -29,7 +30,7 @@ $('.infinite-table').infinitePages
    $(this).text("Trouble! Please drink some coconut water and click again")
 ```
 
-You can also manually control the firing of specific events:
+You can also manually control the firing of load events:
 
 ```
 # Force load of the next page
