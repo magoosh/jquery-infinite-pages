@@ -63,20 +63,16 @@ Example `index.html.erb`:
 
 ```erb
 <div class="infinite-table">
- <table>
-   <thead>
-     <tr>
-       <th>Lesson</th>
-       <th></th>
-     </tr>
-   </thead>
-   <tbody>
-     <%= render :partial => 'lessons', :object => @lessons %>
-   </tbody>
- </table>
- <p class="pagination">
-   <%= link_to_next_page(@lessons, 'Next Page'))%>
- </p>
+  <table>
+    <tr>
+      <th>Lesson</th>
+      <th></th>
+    </tr>
+    <%= render :partial => 'lessons', :object => @lessons %>
+  </table>
+  <p class="pagination">
+    <%= link_to_next_page(@lessons, 'Next Page'))%>
+  </p>
 </div>
 ```
 
@@ -96,7 +92,7 @@ Example `index.js.erb`:
 ```javascript
 // Append new data
 $("<%=j render(:partial => 'lessons', :object => @lessons) %>")
-  .appendTo($(".infinite-table tbody"));
+  .appendTo($(".infinite-table table"));
 
 // Update pagination link
 <% if answers.last_page? %>
