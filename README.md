@@ -6,20 +6,13 @@ A light-weight jQuery plugin for adding infinite scrolling to paginated HTML vie
 This plugin's designed for Kaminari and Rails, but it should be flexible enough to use
 almost anywhere.
 
-Installation
-------------
+Usage
+-----
+Infinite Pages binds to an element containing a `rel="next"` pagination link and
+watches for scroll events. When the link is close to the bottom of the screen, an async
+request to the next page is triggered.
 
-Just copy the `jquery.infinite-pages.js.coffee` file to your `app/assets/javascripts`
-folder.
-
-(It would be awesome to make this a gem, so consider that a feature request :smile:)
-
-Plugin Usage
-------------
-
-When the user scrolls to the point where the `rel="next"` link is within `buffer` pixels
-of the bottom of the screen, an async request to the next page is triggered. The response
-should then update the displayed data and the pagination link.
+The server's response should add the new page and update the pagination link.
 
 ```coffeescript
 # Setup plugin and define optional event callbacks
@@ -34,7 +27,11 @@ $('.infinite-table').infinitePages
  error: ->
    # called after failed ajax call
    $(this).text("Trouble! Please drink some coconut water and click again")
+```
 
+You can also manually control the firing of specific events:
+
+```
 # Force load of the next page
 $('.infinite-table').infinitePages('next')
 
@@ -44,6 +41,14 @@ $('.infinite-table').infinitePages('pause')
 # Resume...
 $('.infinite-table').infinitePages('resume')
 ```
+
+Installation
+------------
+
+Just copy the `jquery.infinite-pages.js.coffee` file to your `app/assets/javascripts`
+folder.
+
+(It would be awesome to make this a gem, so consider that a feature request :smile:)
 
 Rails/Kaminari Example
 ----------------------
