@@ -49,7 +49,7 @@ Rails/Kaminari Example
 The following is an example of how to integrate this plugin into your Rails app
 using Kaminari.
 
-Example `lessons_controller.rb`:
+Set up pagination in `lessons_controller.rb`:
 
 ```ruby
 class LessonsController
@@ -59,7 +59,7 @@ class LessonsController
 end
 ```
 
-Example `index.html.erb`:
+Write the template for your list of lessons in `index.html.erb`:
 
 ```erb
 <div class="infinite-table">
@@ -71,12 +71,12 @@ Example `index.html.erb`:
     <%= render :partial => 'lessons', :object => @lessons %>
   </table>
   <p class="pagination">
-    <%= link_to_next_page(@lessons, 'Next Page'))%>
+    <%= link_to_next_page(@lessons, 'Next Page', :remote => true))%>
   </p>
 </div>
 ```
 
-Example `_lessons.html.erb`:
+...and `_lessons.html.erb`:
 
 ```erb
 <% @lessons.each do |lesson| %>
@@ -87,7 +87,7 @@ Example `_lessons.html.erb`:
 <% end %>
 ```
 
-Example `index.js.erb`:
+Append new data to the table in `index.js.erb`:
 
 ```javascript
 // Append new data
@@ -98,6 +98,24 @@ $("<%=j render(:partial => 'lessons', :object => @lessons) %>")
 <% if answers.last_page? %>
   $('.pagination').html("That's all, folks!");
 <% else %>
-  $('.pagination').html("<%=j link_to_next_page(@lessons, 'Next Page'))%>");
+  $('.pagination')
+    .html("<%=j link_to_next_page(@lessons, 'Next Page', :remote => true))%>");
 <% end %>
 ```
+
+At this point, the pagination link at the bottom of your table should allow you
+to load the next page without refreshing. Finally, we trigger the next page load
+with the `infinitePages` plugin in `lessons.js.coffee`:
+
+```coffee
+$ ->
+  # Configure infinite table
+  $('.infinite-table').infinitePages
+    # debug: true
+    loading: ->
+      $(this).text('Loading next page...')
+    error: ->
+      $(this).button('There was an error, please try again')
+```
+
+Voila! You should now have an infinitely long list of lessons.
