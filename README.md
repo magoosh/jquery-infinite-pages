@@ -1,6 +1,8 @@
 jQuery Infinite Pages
 =====================
 
+[![Gem Version](https://badge.fury.io/rb/jquery-infinite-pages.svg)](http://badge.fury.io/rb/jquery-infinite-pages)
+
 A light-weight jQuery plugin for adding infinite scrolling to paginated HTML views
 that tastes great with [Rails](https://github.com/rails/rails) and
 [Kaminari](https://github.com/amatsuda/kaminari).
