@@ -10,6 +10,29 @@ that tastes great with [Rails](https://github.com/rails/rails) and
 This project was originally designed for Rails, but the core plugin is flexible
 enough to use anywhere.
 
+Installation
+------------
+
+Add this line to your application's `Gemfile`:
+```ruby
+gem 'jquery-infinite-pages'
+```
+
+And then execute:
+```
+bundle install
+```
+
+Add to your `application.js` file:
+```javascript
+//= require jquery.infinite-pages
+```
+
+### Non-Rails
+
+Just copy the `jquery.infinite-pages.js.coffee` file from `app/assets/javascripts` to
+wherever you want it.
+
 Usage
 -----
 jQuery Infinite Pages binds to an element containing a `rel="next"` pagination link and
@@ -46,32 +69,6 @@ $('.infinite-table').infinitePages('pause')
 # Resume...
 $('.infinite-table').infinitePages('resume')
 ```
-
-Installation
-------------
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'jquery-infinite-pages'
-```
-
-And then execute:
-
-```
-bundle install
-```
-
-Add to your `application.js`:
-
-```javascript
-//= require jquery.infinite-pages
-```
-
-### Non-Rails
-
-Just copy the `jquery.infinite-pages.js.coffee` file from `app/assets/javascripts` to
-wherever you want it.
 
 Rails/Kaminari Example
 ----------------------
