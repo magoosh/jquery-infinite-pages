@@ -53,7 +53,7 @@ Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'jquery-infinite-pages', :git => 'git://github.com/magoosh/jquery-infinite-pages.git'
+gem 'jquery-infinite-pages'
 ```
 
 And then execute:
