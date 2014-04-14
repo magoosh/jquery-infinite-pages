@@ -36,7 +36,7 @@ $('.infinite-table').infinitePages
 
 You can also manually control the firing of load events:
 
-```
+```coffeescript
 # Force load of the next page
 $('.infinite-table').infinitePages('next')
 
