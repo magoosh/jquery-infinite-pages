@@ -1,2 +1,2 @@
-require 'jquery-infinite-pages/version'
-require 'jquery-infinite-pages/engine'
+require 'jquery/infinite_pages/version'
+require 'jquery/infinite_pages/engine'
