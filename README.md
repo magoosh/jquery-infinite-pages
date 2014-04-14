@@ -7,8 +7,8 @@ A light-weight jQuery plugin for adding infinite scrolling to paginated HTML vie
 that tastes great with [Rails](https://github.com/rails/rails) and
 [Kaminari](https://github.com/amatsuda/kaminari).
 
-This project was originally designed for Rails, so it's wrapped in a gem for easy
-installation. However, the core plugin is flexible enough to use anywhere.
+This project was originally designed for Rails, but the core plugin is flexible
+enough to use anywhere.
 
 Usage
 -----
