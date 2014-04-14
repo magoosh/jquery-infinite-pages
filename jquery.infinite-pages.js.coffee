@@ -38,8 +38,16 @@ Released under the MIT License
       
     # Setup and bind to related events
     init: ->
-      $(window).scroll =>
-        @check()
+      
+      # Debounce scroll event to improve performance
+      scrollTimeout = null
+      scrollHandler = (=> @check())
+      
+      $(window).scroll ->
+        if scrollTimeout
+          clearTimeout(scrollTimeout)
+          scrollTimeout = null
+        scrollTimeout = setTimeout(scrollHandler, 250)
         
     # Internal helper for logging messages
     _log: (msg) ->
