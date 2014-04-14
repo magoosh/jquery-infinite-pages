@@ -1,0 +1,3 @@
+module JqueryInfinitePages
+  VERSION = "0.1.1"
+end

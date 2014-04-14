@@ -46,10 +46,28 @@ $('.infinite-table').infinitePages('resume')
 Installation
 ------------
 
-Just copy the `jquery.infinite-pages.js.coffee` file to your `app/assets/javascripts`
-folder.
+Add this line to your application's Gemfile:
 
-(It would be awesome to make this a gem, so consider that a feature request :smile:)
+```ruby
+gem 'jquery-infinite-pages', :git => 'git://github.com/magoosh/jquery-infinite-pages.git'
+```
+
+And then execute:
+
+```
+bundle install
+```
+
+Add to your `application.js`:
+
+```javascript
+//= require jquery.infinite-pages
+```
+
+### Non-Rails
+
+Just copy the `jquery.infinite-pages.js.coffee` file from `app/assets/javascripts` to
+wherever you want it.
 
 Rails/Kaminari Example
 ----------------------
