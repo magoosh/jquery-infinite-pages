@@ -1,10 +1,12 @@
 jQuery Infinite Pages
 =====================
 
-A light-weight jQuery plugin for adding infinite scrolling to paginated HTML views.
+A light-weight jQuery plugin for adding infinite scrolling to paginated HTML views
+that tastes great with [Rails](https://github.com/rails/rails) and
+[Kaminari](https://github.com/amatsuda/kaminari).
 
-This plugin is designed for Kaminari and Rails, but it should be flexible enough to use
-almost anywhere.
+This project was originally designed for Rails, so it's wrapped in a gem for easy
+installation. However, the core plugin is flexible enough to use anywhere.
 
 Usage
 -----
