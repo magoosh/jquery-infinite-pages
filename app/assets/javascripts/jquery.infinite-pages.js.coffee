@@ -80,8 +80,8 @@ Released under the MIT License
         @_loading()
         
         $.getScript(@$container.find(@options.navSelector).attr('href'))
-          .done (=> @_success())
-          .fail (=> @_error())
+          .done(=> @_success())
+          .fail(=> @_error())
     
     _loading: ->
       @options.state.loading = true
