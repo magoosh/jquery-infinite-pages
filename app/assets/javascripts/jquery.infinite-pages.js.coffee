@@ -13,7 +13,7 @@ Released under the MIT License
 (($, window) ->
   # Define the plugin class
   class InfinitePages
-    
+
     # Default settings
     defaults:
       debug: false  # set to true to log messages to the console
@@ -26,7 +26,7 @@ Released under the MIT License
       state:
         paused:  false
         loading: false
-    
+
     # Constructs the new InfinitePages object
     #
     # container - the element containing the infinite table and pagination links
@@ -34,27 +34,26 @@ Released under the MIT License
       @options = $.extend({}, @defaults, options)
       @$container = $(container)
       @$table = $(container).find('table')
-      
       @$context = $(options.context)
       @init()
-      
+
     # Setup and bind to related events
     init: ->
-      
+
       # Debounce scroll event to improve performance
       scrollTimeout = null
       scrollHandler = (=> @check())
-      
+
       @$context.scroll ->
         if scrollTimeout
           clearTimeout(scrollTimeout)
           scrollTimeout = null
         scrollTimeout = setTimeout(scrollHandler, 250)
-        
+
     # Internal helper for logging messages
     _log: (msg) ->
       console?.log(msg) if @options.debug
-      
+
     # Check the distance of the nav selector from the bottom of the window and fire
     # load event if close enough
     check: ->
@@ -64,7 +63,7 @@ Released under the MIT License
       else
         windowBottom = @$context.scrollTop() + @$context.height()
         distance = nav.offset().top - windowBottom
-        
+
         if @options.state.paused
           @_log "Paused"
         else if @options.state.loading
@@ -73,56 +72,56 @@ Released under the MIT License
           @_log "#{distance - @options.buffer}px remaining..."
         else
           @next() # load the next page
-        
+
     # Load the next page
     next: ->
       if @options.state.done
         @_log "Loaded all pages"
       else
         @_loading()
-        
+
         $.getScript(@$container.find(@options.navSelector).attr('href'))
           .done(=> @_success())
           .fail(=> @_error())
-    
+
     _loading: ->
       @options.state.loading = true
       @_log "Loading next page..."
       if typeof @options.loading is 'function'
         @$container.find(@options.navSelector).each(@options.loading)
-    
+
     _success: ->
       @options.state.loading = false
       @_log "New page loaded!"
       if typeof @options.success is 'function'
         @$container.find(@options.navSelector).each(@options.success)
-    
+
     _error: ->
       @options.state.loading = false
       @_log "Error loading new page :("
       if typeof @options.error is 'function'
         @$container.find(@options.navSelector).each(@options.error)
-    
+
     # Pause firing of events on scroll
     pause: ->
       @options.state.paused = true
       @_log "Scroll checks paused"
-    
+
     # Resume firing of events on scroll
     resume: ->
       @options.state.paused = false
       @_log "Scroll checks resumed"
       @check()
-    
+
   # Define the plugin
   $.fn.extend infinitePages: (option, args...) ->
     @each ->
       $this = $(this)
       data = $this.data('infinitepages')
-      
+
       if !data
         $this.data 'infinitepages', (data = new InfinitePages(this, option))
       if typeof option == 'string'
         data[option].apply(data, args)
-  
+
 ) window.jQuery, window
