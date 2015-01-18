@@ -122,11 +122,11 @@ $("<%=j render(:partial => 'lessons', :object => @lessons) %>")
   .appendTo($(".infinite-table table"));
 
 // Update pagination link
-<% if answers.last_page? %>
+<% if @lessons.last_page? %>
   $('.pagination').html("That's all, folks!");
 <% else %>
   $('.pagination')
-    .html("<%=j link_to_next_page(@lessons, 'Next Page', :remote => true))%>");
+    .html("<%=j link_to_next_page(@lessons, 'Next Page', :remote => true) %>");
 <% end %>
 ```
 
