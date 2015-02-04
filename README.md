@@ -98,7 +98,7 @@ Write the template for your list of lessons in `index.html.erb`:
     <%= render :partial => 'lessons', :object => @lessons %>
   </table>
   <p class="pagination">
-    <%= link_to_next_page(@lessons, 'Next Page', :remote => true))%>
+    <%= link_to_next_page(@lessons, 'Next Page', :remote => true) %>
   </p>
 </div>
 ```
