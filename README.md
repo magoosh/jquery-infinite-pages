@@ -47,7 +47,7 @@ pagination link.
 $('.infinite-table').infinitePages
  debug: true
  buffer: 200 # load new page when within 200px of nav link
- context: '.pane' # selector to define the context of the scrolling container (defaults to window)
+ context: '.pane' # define the scrolling container (defaults to window)
  loading: ->
    # jQuery callback on the nav element
    $(this).text("Loading...")
