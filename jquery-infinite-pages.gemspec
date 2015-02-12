@@ -13,5 +13,6 @@ Gem::Specification.new do |s|
   s.files          = Dir["{lib,app}/**/*"] + ["LICENSE", "README.md"]
   
   s.add_dependency "jquery-rails"
+  s.add_dependency "coffee-script"
   s.add_dependency "railties", ">= 3.1"
 end
