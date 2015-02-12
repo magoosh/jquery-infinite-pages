@@ -22,7 +22,7 @@ Released under the MIT License
       loading: null # optional callback when next-page request begins
       success: null # optional callback when next-page request finishes
       error:   null # optional callback when next-page request fails
-      context: window #define the context of the scrolling container
+      context: window # context to define the scrolling container
       state:
         paused:  false
         loading: false
@@ -34,7 +34,7 @@ Released under the MIT License
       @options = $.extend({}, @defaults, options)
       @$container = $(container)
       @$table = $(container).find('table')
-      @$context = $(options.context)
+      @$context = $(@options.context)
       @init()
 
     # Setup and bind to related events
