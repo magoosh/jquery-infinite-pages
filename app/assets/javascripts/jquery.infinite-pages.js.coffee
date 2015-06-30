@@ -54,16 +54,15 @@ Released under the MIT License
       scrollDelay = 250
       scrollTimeout = null
       lastCheckAt = null
-      scrollHandler = (=>
+      scrollHandler = =>
         lastCheckAt = +new Date
         @check()
-      )
 
       # Have we waited enough time since the last check?
       shouldCheck = -> +new Date > lastCheckAt + scrollDelay
 
       @$context.scroll ->
-        scrollHandler() if shouldCheck # Call the check once every scrollDelay ms
+        scrollHandler() if shouldCheck() # Call check once every scrollDelay ms
         if scrollTimeout
           clearTimeout(scrollTimeout)
           scrollTimeout = null
