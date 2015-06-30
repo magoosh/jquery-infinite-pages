@@ -51,14 +51,23 @@ Released under the MIT License
     init: ->
 
       # Debounce scroll event to improve performance
+      scrollDelay = 250
       scrollTimeout = null
-      scrollHandler = (=> @check())
+      lastCheckAt = null
+      scrollHandler = (=>
+        lastCheckAt = +new Date
+        @check()
+      )
+
+      # Have we waited enough time since the last check?
+      shouldCheck = -> +new Date > lastCheckAt + scrollDelay
 
       @$context.scroll ->
+        scrollHandler() if shouldCheck # Call the check once every scrollDelay ms
         if scrollTimeout
           clearTimeout(scrollTimeout)
           scrollTimeout = null
-        scrollTimeout = setTimeout(scrollHandler, 250)
+        scrollTimeout = setTimeout(scrollHandler, scrollDelay)
 
       # Set a data attribute so we can find again after a turbolink page is loaded
       @$container.attr('data-jquery-infinite-pages-container', @instanceId)
