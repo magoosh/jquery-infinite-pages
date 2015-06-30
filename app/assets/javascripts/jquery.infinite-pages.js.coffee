@@ -13,6 +13,13 @@ Released under the MIT License
 (($, window) ->
   # Define the plugin class
   class InfinitePages
+    # Internal id to tracking the elements used for multiple instances
+    @_ID: 0
+
+    # Internal helper to return a unique id for a new instance for the page
+    @_nextId: ->
+      @_ID += 1
+      @_ID
 
     # Default settings
     defaults:
@@ -35,6 +42,9 @@ Released under the MIT License
       @$container = $(container)
       @$table = $(container).find('table')
       @$context = $(@options.context)
+      @instanceId = @constructor._nextId()
+      @invalidateAt = +new Date # timestamp before which we ignore responses
+      @requestAts = [] # list of timestamps for pending requests
       @init()
 
     # Setup and bind to related events
@@ -49,6 +59,14 @@ Released under the MIT License
           clearTimeout(scrollTimeout)
           scrollTimeout = null
         scrollTimeout = setTimeout(scrollHandler, 250)
+
+      # Set a data attribute so we can find again after a turbolink page is loaded
+      @$container.attr('data-jquery-infinite-pages-container', @instanceId)
+
+      # Setup callbacks to handle turbolinks page loads
+      $(window.document)
+        .on("page:before-unload", => @_invalidateActiveRequests())
+        .on("page:change", => @_recache())
 
     # Internal helper for logging messages
     _log: (msg) ->
@@ -80,6 +98,7 @@ Released under the MIT License
       else
         @_loading()
 
+        @requestAts.push +new Date # note when this request started
         $.getScript(@$container.find(@options.navSelector).attr('href'))
           .done(=> @_success())
           .fail(=> @_error())
@@ -91,12 +110,17 @@ Released under the MIT License
         @$container.find(@options.navSelector).each(@options.loading)
 
     _success: ->
+      # ignore any requests that started before we last invalidated
+      return if @_isInvalidatedRequest(@requestAts.shift())
+      @_recache()
       @options.state.loading = false
       @_log "New page loaded!"
       if typeof @options.success is 'function'
         @$container.find(@options.navSelector).each(@options.success)
 
     _error: ->
+      # ignore any requests that started before we last invalidated
+      return if @_isInvalidatedRequest(@requestAts.shift())
       @options.state.loading = false
       @_log "Error loading new page :("
       if typeof @options.error is 'function'
@@ -112,6 +136,20 @@ Released under the MIT License
       @options.state.paused = false
       @_log "Scroll checks resumed"
       @check()
+
+    _recache: ->
+      # Recache the element references we use (needed when using turbolinks)
+      @$container = $("[data-jquery-infinite-pages-container=#{@instanceId}]")
+      @$table = @$container.find('table')
+      @$context = $(@options.context)
+
+    _invalidateActiveRequests: ->
+      # Invalidate any active requests (needed when using turbolinks)
+      @invalidateAt = +new Date
+
+    _isInvalidatedRequest: (requestAt) ->
+      # Check to see if a request was invalidated
+      requestAt < @invalidateAt
 
   # Define the plugin
   $.fn.extend infinitePages: (option, args...) ->
