@@ -87,7 +87,7 @@ class LessonsController
 end
 ```
 
-Write the template for your list of lessons in `index.html.erb`:
+Write the template for your list of lessons in `app/views/lessons/index.html.erb`:
 
 ```erb
 <div class="infinite-table">
@@ -104,7 +104,7 @@ Write the template for your list of lessons in `index.html.erb`:
 </div>
 ```
 
-...and `_lessons.html.erb`:
+...and `app/views/lessons/_lessons.html.erb`:
 
 ```erb
 <% @lessons.each do |lesson| %>
@@ -115,7 +115,7 @@ Write the template for your list of lessons in `index.html.erb`:
 <% end %>
 ```
 
-Append new data to the table in `index.js.erb`:
+Append new data to the table in `app/views/lessons/index.js.erb`:
 
 ```javascript
 // Append new data
@@ -133,7 +133,7 @@ $("<%=j render(:partial => 'lessons', :object => @lessons) %>")
 
 At this point, the pagination link at the bottom of your table should allow you
 to load the next page without refreshing. Finally, we trigger the next page load
-with the `infinitePages` plugin in `lessons.js.coffee`:
+with the `infinitePages` plugin in `app/assets/javascripts/lessons.js.coffee`:
 
 ```coffee
 $ ->
