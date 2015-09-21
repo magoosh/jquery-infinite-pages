@@ -41,7 +41,7 @@ Released under the MIT License
       @$container = $(container)
       @$table = $(container).find('table')
       @$context = $(@options.context)
-      @instanceId = @constructor._nextId()
+      @instanceId = @constructor._nextInstanceId()
       @init()
 
     # Setup and bind to related events
