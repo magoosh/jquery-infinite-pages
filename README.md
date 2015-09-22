@@ -1,3 +1,5 @@
+*This branch makes two changes to magoosh's 0.2.0 version: it adds support for turbolinks, and it loads the next page of results while scrolling instead of waiting until scrolling finishes.*
+
 jQuery Infinite Pages
 =====================
 
