@@ -85,7 +85,6 @@ Released under the MIT License
         @_loading()
 
         $container = @$container
-        @requestAts.push +new Date # note when this request started
         $.getScript(@$container.find(@options.navSelector).attr('href'))
           .done(=> @_success($container))
           .fail(=> @_error($container))
