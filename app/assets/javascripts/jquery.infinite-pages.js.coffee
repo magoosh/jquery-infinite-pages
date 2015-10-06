@@ -26,6 +26,7 @@ Released under the MIT License
       state:
         paused:  false
         loading: false
+      scrolling: true # autoload next page 
 
     # Constructs the new InfinitePages object
     #
@@ -41,14 +42,15 @@ Released under the MIT License
     init: ->
 
       # Debounce scroll event to improve performance
-      scrollTimeout = null
-      scrollHandler = (=> @check())
+      if @options.scrolling
+        scrollTimeout = null
+        scrollHandler = (=> @check())
 
-      @$context.scroll ->
-        if scrollTimeout
-          clearTimeout(scrollTimeout)
-          scrollTimeout = null
-        scrollTimeout = setTimeout(scrollHandler, 250)
+        @$context.scroll ->
+          if scrollTimeout
+            clearTimeout(scrollTimeout)
+            scrollTimeout = null
+          scrollTimeout = setTimeout(scrollHandler, 250)
 
     # Internal helper for logging messages
     _log: (msg) ->
@@ -79,7 +81,7 @@ Released under the MIT License
         @_log "Loaded all pages"
       else
         @_loading()
-
+        @_log 'Load from url: ', @$container.find(@options.navSelector).attr 'href'
         $.getScript(@$container.find(@options.navSelector).attr('href'))
           .done(=> @_success())
           .fail(=> @_error())
