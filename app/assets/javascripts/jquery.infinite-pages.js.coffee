@@ -132,7 +132,9 @@ Released under the MIT License
       @$context = $(@options.context)
 
       @_listenForScrolling()
-      
+      @_log "Recache"
+
+
     _listenForScrolling: ->
       # Debounce scroll event to improve performance
       scrollDelay = 250
@@ -152,9 +154,14 @@ Released under the MIT License
           scrollTimeout = null
         scrollTimeout = setTimeout(scrollHandler, scrollDelay)
 
+      @_log "Listen For Scrolling"
+
+
     _invalidateActiveRequests: ->
       # Invalidate any active requests (needed when using turbolinks)
       @invalidateAt = +new Date
+
+      @_log "Invalidate Active Requests "
 
     _isInvalidatedRequest: (requestAt) ->
       # Check to see if a request was invalidated
