@@ -52,7 +52,7 @@ Released under the MIT License
       @$container.attr('data-jquery-infinite-pages-container', @instanceId)
 
       # Setup the callback to handle turbolinks page loads
-      $(window.document).on("page:change", => @_recache())
+      $(window.document).on("turbolinks:load", => @_recache())
 
     # Internal helper for logging messages
     _log: (msg) ->
