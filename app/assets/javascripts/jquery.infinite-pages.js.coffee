@@ -44,6 +44,7 @@ Released under the MIT License
       scrollTimeout = null
       scrollHandler = (=> @check())
 
+      @$context.unbind('scroll')
       @$context.scroll ->
         if scrollTimeout
           clearTimeout(scrollTimeout)
