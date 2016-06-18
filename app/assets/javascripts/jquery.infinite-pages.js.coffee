@@ -44,7 +44,8 @@ Released under the MIT License
       scrollTimeout = null
       scrollHandler = (=> @check())
 
-      @$context.scroll ->
+      # Use namespace to let us unbind event handler
+      @$context.on 'scroll.infinitePages', ->
         if scrollTimeout
           clearTimeout(scrollTimeout)
           scrollTimeout = null
@@ -113,6 +114,11 @@ Released under the MIT License
       @_log "Scroll checks resumed"
       @check()
 
+    # Stop event handling
+    stop: ->
+      @$context.off 'scroll.infinitePages'
+      @_log "Scroll checks stopped"
+
   # Define the plugin
   $.fn.extend infinitePages: (option, args...) ->
     @each ->
@@ -122,6 +128,10 @@ Released under the MIT License
       if !data
         $this.data 'infinitepages', (data = new InfinitePages(this, option))
       if typeof option == 'string'
-        data[option].apply(data, args)
+        if option == 'destroy'
+          data.stop args
+          $this.removeData 'infinitepages'
+        else
+          data[option].apply(data, args)
 
 ) window.jQuery, window
