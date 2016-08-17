@@ -58,7 +58,7 @@ Released under the MIT License
     # load event if close enough
     check: ->
       nav = @$container.find(@options.navSelector)
-      if nav.size() == 0
+      if nav.length == 0
         @_log "No more pages to load"
       else
         windowBottom = @$context.scrollTop() + @$context.height()
