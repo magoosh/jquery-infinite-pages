@@ -13,6 +13,12 @@ Released under the MIT License
 (($, window) ->
   # Define the plugin class
   class InfinitePages
+    # Internal id to tracking the elements used for multiple instances
+    @_INSTANCE_ID: 0
+
+    # Internal helper to return a unique id for a new instance for the page
+    @_nextInstanceId: ->
+      @_INSTANCE_ID += 1
 
     # Default settings
     defaults:
@@ -35,20 +41,18 @@ Released under the MIT License
       @$container = $(container)
       @$table = $(container).find('table')
       @$context = $(@options.context)
+      @instanceId = @constructor._nextInstanceId()
       @init()
 
     # Setup and bind to related events
     init: ->
+      @_listenForScrolling()
 
-      # Debounce scroll event to improve performance
-      scrollTimeout = null
-      scrollHandler = (=> @check())
+      # Set a data attribute so we can find again after a turbolink page is loaded
+      @$container.attr('data-jquery-infinite-pages-container', @instanceId)
 
-      @$context.scroll ->
-        if scrollTimeout
-          clearTimeout(scrollTimeout)
-          scrollTimeout = null
-        scrollTimeout = setTimeout(scrollHandler, 250)
+      # Setup the callback to handle turbolinks page loads
+      $(window.document).on("turbolinks:load", => @_recache())
 
     # Internal helper for logging messages
     _log: (msg) ->
@@ -58,7 +62,7 @@ Released under the MIT License
     # load event if close enough
     check: ->
       nav = @$container.find(@options.navSelector)
-      if nav.size() == 0
+      if nav.length == 0
         @_log "No more pages to load"
       else
         windowBottom = @$context.scrollTop() + @$context.height()
@@ -80,9 +84,10 @@ Released under the MIT License
       else
         @_loading()
 
+        $container = @$container
         $.getScript(@$container.find(@options.navSelector).attr('href'))
-          .done(=> @_success())
-          .fail(=> @_error())
+          .done(=> @_success($container))
+          .fail(=> @_error($container))
 
     _loading: ->
       @options.state.loading = true
@@ -90,17 +95,21 @@ Released under the MIT License
       if typeof @options.loading is 'function'
         @$container.find(@options.navSelector).each(@options.loading)
 
-    _success: ->
+    _success: ($container) ->
+      # ignore any requests for elements that are no longer on the page
+      return unless $.contains(document, $container[0])
       @options.state.loading = false
       @_log "New page loaded!"
       if typeof @options.success is 'function'
-        @$container.find(@options.navSelector).each(@options.success)
+        $container.find(@options.navSelector).each(@options.success)
 
-    _error: ->
+    _error: ($container) ->
+      # ignore any requests for elements that are no longer on the page
+      return unless $.contains(document, $container[0])
       @options.state.loading = false
       @_log "Error loading new page :("
       if typeof @options.error is 'function'
-        @$container.find(@options.navSelector).each(@options.error)
+        $container.find(@options.navSelector).each(@options.error)
 
     # Pause firing of events on scroll
     pause: ->
@@ -112,6 +121,51 @@ Released under the MIT License
       @options.state.paused = false
       @_log "Scroll checks resumed"
       @check()
+
+    _recache: ->
+      # remove the existing scroll listener
+      @$context.off("scroll")
+      
+      # Recache the element references we use (needed when using turbolinks)
+      @$container = $("[data-jquery-infinite-pages-container=#{@instanceId}]")
+      @$table = @$container.find('table')
+      @$context = $(@options.context)
+
+      @_listenForScrolling()
+      @_log "Recache"
+
+
+    _listenForScrolling: ->
+      # Debounce scroll event to improve performance
+      scrollDelay = 250
+      scrollTimeout = null
+      lastCheckAt = null
+      scrollHandler = =>
+        lastCheckAt = +new Date
+        @check()
+
+      # Have we waited enough time since the last check?
+      shouldCheck = -> +new Date > lastCheckAt + scrollDelay
+
+      @$context.scroll ->
+        scrollHandler() if shouldCheck() # Call check once every scrollDelay ms
+        if scrollTimeout
+          clearTimeout(scrollTimeout)
+          scrollTimeout = null
+        scrollTimeout = setTimeout(scrollHandler, scrollDelay)
+
+      @_log "Listen For Scrolling"
+
+
+    _invalidateActiveRequests: ->
+      # Invalidate any active requests (needed when using turbolinks)
+      @invalidateAt = +new Date
+
+      @_log "Invalidate Active Requests "
+
+    _isInvalidatedRequest: (requestAt) ->
+      # Check to see if a request was invalidated
+      requestAt < @invalidateAt
 
   # Define the plugin
   $.fn.extend infinitePages: (option, args...) ->
