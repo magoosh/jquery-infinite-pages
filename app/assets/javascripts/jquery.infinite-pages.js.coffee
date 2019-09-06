@@ -118,6 +118,7 @@ Released under the MIT License
     abort: ->
       if @jqXHR
         @jqXHR.abort()
+        @jqXHR = null
         @_log "Page load aborted!"
       else
         @_log "There was no request to abort"  
