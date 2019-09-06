@@ -1,5 +1,5 @@
 ###
-jQuery Infinite Pages v0.2.0
+jQuery Infinite Pages v0.2.3
 https://github.com/magoosh/jquery-infinite-pages
 
 Released under the MIT License
