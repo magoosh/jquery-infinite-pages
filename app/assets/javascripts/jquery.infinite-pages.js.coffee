@@ -34,7 +34,6 @@ Released under the MIT License
     constructor: (container, options) ->
       @options = $.extend({}, @defaults, options)
       @$container = $(container)
-      @$table = $(container).find('table')
       @$context = $(@options.context)
       @init()
 
