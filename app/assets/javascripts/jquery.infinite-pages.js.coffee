@@ -80,7 +80,7 @@ Released under the MIT License
       else
         @_loading()
 
-        $.getScript(@$container.find(@options.navSelector).attr('href'))
+        @jqXHR = $.getScript(@$container.find(@options.navSelector).attr('href'))
           .done(=> @_success())
           .fail(=> @_error())
 
@@ -92,6 +92,7 @@ Released under the MIT License
 
     _success: ->
       @options.state.loading = false
+      @jqXHR = null
       @_log "New page loaded!"
       if typeof @options.success is 'function'
         @$container.find(@options.navSelector).each(@options.success)
@@ -112,6 +113,14 @@ Released under the MIT License
       @options.state.paused = false
       @_log "Scroll checks resumed"
       @check()
+      
+    # Abort loading of the page
+    abort: ->
+      if @jqXHR
+        @jqXHR.abort()
+        @_log "Page load aborted!"
+      else
+        @_log "There was no request to abort"  
 
   # Define the plugin
   $.fn.extend infinitePages: (option, args...) ->
