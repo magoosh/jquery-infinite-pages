@@ -19,6 +19,7 @@ Released under the MIT License
       debug: false  # set to true to log messages to the console
       navSelector: 'a[rel=next]'
       buffer: 1000  # 1000px buffer by default
+      debounce: 250 # 250ms debounce by default
       loading: null # optional callback when next-page request begins
       success: null # optional callback when next-page request finishes
       error:   null # optional callback when next-page request fails
@@ -43,12 +44,13 @@ Released under the MIT License
       # Debounce scroll event to improve performance
       scrollTimeout = null
       scrollHandler = (=> @check())
+      debounce = @options.debounce
 
       @$context.scroll ->
         if scrollTimeout
           clearTimeout(scrollTimeout)
           scrollTimeout = null
-        scrollTimeout = setTimeout(scrollHandler, 250)
+        scrollTimeout = setTimeout(scrollHandler, debounce)
 
     # Internal helper for logging messages
     _log: (msg) ->
