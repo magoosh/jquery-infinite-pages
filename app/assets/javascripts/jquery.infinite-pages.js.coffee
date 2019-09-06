@@ -46,8 +46,9 @@ Released under the MIT License
       scrollHandler = (=> @check())
       debounce = @options.debounce
 
-      @$context.scroll ->
-        if scrollTimeout
+      # Use namespace to let us unbind event handler
+      @$context.on 'scroll.infinitePages', ->
+        if scrollTimeout && self.active
           clearTimeout(scrollTimeout)
           scrollTimeout = null
         scrollTimeout = setTimeout(scrollHandler, debounce)
@@ -116,6 +117,10 @@ Released under the MIT License
       @_log "Scroll checks resumed"
       @check()
       
+    stop: ->
+      @$context.off 'scroll.infinitePages'
+      @_log "Scroll checks stopped"  
+      
     # Abort loading of the page
     abort: ->
       if @jqXHR
@@ -134,6 +139,11 @@ Released under the MIT License
       if !data
         $this.data 'infinitepages', (data = new InfinitePages(this, option))
       if typeof option == 'string'
-        data[option].apply(data, args)
+        if option == 'destroy'
+           data.stop args
+         else if option == 'reinit'
+           data.init args
+         else
+          data[option].apply(data, args)
 
 ) window.jQuery, window
