@@ -1,5 +1,5 @@
 ###
-jQuery Infinite Pages v0.2.0
+jQuery Infinite Pages v0.2.3
 https://github.com/magoosh/jquery-infinite-pages
 
 Released under the MIT License
@@ -19,6 +19,7 @@ Released under the MIT License
       debug: false  # set to true to log messages to the console
       navSelector: 'a[rel=next]'
       buffer: 1000  # 1000px buffer by default
+      debounce: 250 # 250ms debounce by default
       loading: null # optional callback when next-page request begins
       success: null # optional callback when next-page request finishes
       error:   null # optional callback when next-page request fails
@@ -33,7 +34,6 @@ Released under the MIT License
     constructor: (container, options) ->
       @options = $.extend({}, @defaults, options)
       @$container = $(container)
-      @$table = $(container).find('table')
       @$context = $(@options.context)
       @init()
 
@@ -43,12 +43,14 @@ Released under the MIT License
       # Debounce scroll event to improve performance
       scrollTimeout = null
       scrollHandler = (=> @check())
+      debounce = @options.debounce
 
-      @$context.scroll ->
-        if scrollTimeout
+      # Use namespace to let us unbind event handler
+      @$context.on 'scroll.infinitePages', ->
+        if scrollTimeout && self.active
           clearTimeout(scrollTimeout)
           scrollTimeout = null
-        scrollTimeout = setTimeout(scrollHandler, 250)
+        scrollTimeout = setTimeout(scrollHandler, debounce)
 
     # Internal helper for logging messages
     _log: (msg) ->
@@ -58,7 +60,7 @@ Released under the MIT License
     # load event if close enough
     check: ->
       nav = @$container.find(@options.navSelector)
-      if nav.size() == 0
+      if nav.length == 0
         @_log "No more pages to load"
       else
         windowBottom = @$context.scrollTop() + @$context.height()
@@ -80,7 +82,7 @@ Released under the MIT License
       else
         @_loading()
 
-        $.getScript(@$container.find(@options.navSelector).attr('href'))
+        @jqXHR = $.getScript(@$container.find(@options.navSelector).attr('href'))
           .done(=> @_success())
           .fail(=> @_error())
 
@@ -92,6 +94,7 @@ Released under the MIT License
 
     _success: ->
       @options.state.loading = false
+      @jqXHR = null
       @_log "New page loaded!"
       if typeof @options.success is 'function'
         @$container.find(@options.navSelector).each(@options.success)
@@ -112,6 +115,19 @@ Released under the MIT License
       @options.state.paused = false
       @_log "Scroll checks resumed"
       @check()
+      
+    stop: ->
+      @$context.off 'scroll.infinitePages'
+      @_log "Scroll checks stopped"  
+      
+    # Abort loading of the page
+    abort: ->
+      if @jqXHR
+        @jqXHR.abort()
+        @jqXHR = null
+        @_log "Page load aborted!"
+      else
+        @_log "There was no request to abort"  
 
   # Define the plugin
   $.fn.extend infinitePages: (option, args...) ->
@@ -122,6 +138,11 @@ Released under the MIT License
       if !data
         $this.data 'infinitepages', (data = new InfinitePages(this, option))
       if typeof option == 'string'
-        data[option].apply(data, args)
+        if option == 'destroy'
+           data.stop args
+         else if option == 'reinit'
+           data.init args
+         else
+          data[option].apply(data, args)
 
 ) window.jQuery, window
